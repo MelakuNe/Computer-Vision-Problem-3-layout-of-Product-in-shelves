@@ -2,16 +2,11 @@ import cv2 as cv
 import numpy as np
 
 
-global j
-j = []
 def predict_image(img: np.ndarray, query: np.ndarray) -> list:
     one = cv.cvtColor(query, cv.COLOR_BGR2GRAY)
     two = cv.cvtColor(img, cv.COLOR_BGR2GRAY)
     j.append(1)
-    if len(j) <= 5:
-        list_of_bboxes = main(one, two)
-    else:
-        list_of_bboxes = main(one, two, 'all')
+    list_of_bboxes = main(one, two)
     return list_of_bboxes
 
 def bounding_box(dst, main_image):
@@ -38,12 +33,9 @@ def method1(Query, Gallery, which):
     sort_matches = sorted(match1, key = lambda x:x[0].distance)
     best_matches = sort_matches[:105]
     get_items = []
-    if which == 'some':
-        for i in best_matches:
-            get_items.append(i[0])
-    else:
-        for i in sort_matches:
-            get_items.append(i[0])
+    for i in best_matches:
+        get_items.append(i[0])
+ 
     sr = np.array([kp1[m.queryIdx].pt for m in get_items]).reshape(-1, 1, 2)
     de = np.array([kp2[n.trainIdx].pt for n in get_items]).reshape(-1, 1, 2)
     return sr, de
